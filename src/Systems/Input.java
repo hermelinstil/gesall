@@ -1,4 +1,4 @@
-package Systems;
+package systems;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -17,6 +17,7 @@ public abstract class Input {
 
     private static HashSet<Integer> keyState = new HashSet<Integer>();
     private static Point mousePosition = new Point();
+    private static boolean mouseIsDown = false;
 
     private static boolean registred = false;
 
@@ -32,17 +33,31 @@ public abstract class Input {
         if(registred) {
             return keyState;
         }
-        throw new IllegalStateException("Systems.Input has not been registred to any canvas");
+        throw new IllegalStateException("systems.Input has not been registred to any canvas");
     }
 
     public static Point getMousePosition() {
         return mousePosition;
     }
 
+    public static boolean isMouseDown() {
+        return mouseIsDown;
+    }
+
     private static class MouseInput extends MouseAdapter {
         @Override
         public void mouseMoved(MouseEvent e) {
             mousePosition.setLocation(e.getX(), e.getY());
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            mouseIsDown = true;
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            mouseIsDown = false;
         }
     }
 

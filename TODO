@@ -1,0 +1,3 @@
+Player pool - för att underlätta nätverk
+När en avatar skjuter, säg till Game istället, låt den hålla koll på cooldown. Detta kommer också att göra det lättare att lägga till i renderingslista och för att skicka shoot-event över nätverk!
+Borde allt skötas på servern? För mycket refactoring?

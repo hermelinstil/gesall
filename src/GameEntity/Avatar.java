@@ -1,6 +1,8 @@
-package GameEntity;
+package gameentity;
 
-import Systems.Input;
+import systems.Collisions;
+import systems.Game;
+import systems.Input;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -18,12 +20,14 @@ public class Avatar extends GameObject {
     private final int shootIntervalInSeconds = 5;
 
     private Bullet bullet;
+    private boolean hidden = false;
 
-    public Avatar(int size) {
-        super(size);
+    public Avatar(Shape geometry) {
+        super(geometry);
 
+        acceleration = 0.2f;
         maxVelocity = 3;
-        bullet = new Bullet(25);
+        z = 1;
     }
 
 
@@ -32,6 +36,21 @@ public class Avatar extends GameObject {
         super.update(delta);
 
         handleInput();
+        hidden = Collisions.check(this);
+        checkBorders();
+    }
+
+    private void checkBorders() {
+        if(x < 0) {
+            x = 0;
+        } else if (x > Game.WIDTH) {
+            x = Game.WIDTH - getWidth();
+        }
+        if(y < 0) {
+            y = 0;
+        } else if(y - getHeight() > Game.HEIGHT) {
+            y = Game.HEIGHT - getHeight();
+        }
     }
 
     public Point getAim() {
@@ -58,7 +77,7 @@ public class Avatar extends GameObject {
             speedX = 0;
         }
 
-        if(Input.getKeyState().contains(KeyEvent.VK_SPACE)) {
+        if(Input.isMouseDown()) {
             if(shootCooldown < (System.currentTimeMillis() - shootIntervalInSeconds*1000)) {
                 shoot();
             }
@@ -67,6 +86,11 @@ public class Avatar extends GameObject {
 
     private void shoot() {
         shootCooldown = System.currentTimeMillis();
+        color = Color.red;
         System.out.println("BAAAM");
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 }

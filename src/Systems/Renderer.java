@@ -1,7 +1,7 @@
-package Systems;
+package systems;
 
-import GameEntity.Avatar;
-import GameEntity.GameObject;
+import gameentity.Avatar;
+import gameentity.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -25,17 +25,23 @@ public class Renderer {
 
     public void render() {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-        g.setColor(Color.BLACK);
 
         for(GameObject object : renderList) {
+            g.setColor(object.getColor());
             g.fillRect(object.getX(),
                     object.getY(),
-                    object.getSize(),
-                    object.getSize());
+                    object.getWidth(),
+                    object.getHeight());
 
-            g.drawLine(object.getX() + object.getSize()/2, object.getY() + object.getSize()/2, ((Avatar)object).getAim().x, ((Avatar)object).getAim().y);
+            if(object instanceof Avatar) {
+                Avatar a = (Avatar) object;
+                if(a.isHidden()) {
+                    g.setColor(Color.WHITE);
+                    g.drawRect(a.getX() - 1, a.getY() - 1, a.getWidth() + 1, a.getHeight() + 1);
+                }
+            }
+
+            //g.drawLine(object.getX() + object.getWidth()/2, object.getY() + object.getHeight()/2, ((Avatar)object).getAim().x, ((Avatar)object).getAim().y);
         }
 
 

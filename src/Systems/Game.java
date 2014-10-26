@@ -1,12 +1,14 @@
-package Systems;
+package systems;
 
-import GameEntity.Avatar;
-import GameEntity.GameObject;
+import gameentity.Avatar;
+import gameentity.GameObject;
+import gameentity.InterpolatingBackground;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Stavling on 2014-10-21.
@@ -17,28 +19,38 @@ public class Game implements Runnable {
     public static final int HEIGHT = 720;
     private boolean running = true;
 
-    private Systems.Renderer renderer;
+    private systems.Renderer renderer;
 
-    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    public static final ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private char[] currentLevel;
+
 
     public Game() {
         BufferStrategy bufferStrategy = initGUI();
+
+        currentLevel = Loader.loadLevel();
+
         populateList();
 
-        renderer = new Systems.Renderer(bufferStrategy);
+        renderer = new systems.Renderer(bufferStrategy);
     }
 
     private void populateList() {
-        gameObjects.add(new Avatar(25));
+        gameObjects.add(new Avatar(new Rectangle(25, 25)));
+        gameObjects.add(new InterpolatingBackground(new Rectangle(WIDTH, HEIGHT)));
+
+        Loader.translateToLevel(currentLevel, gameObjects);
+
+        Collections.sort(gameObjects);
     }
 
     @Override
     public void run() {
 
-        long oldTime = System.nanoTime();
+        long oldTime;
         long newTime = System.nanoTime();
 
-        //Systems.Game loop
+        //systems.Game loop
         while(running) {
             oldTime = newTime;
             newTime = System.nanoTime();
@@ -64,7 +76,6 @@ public class Game implements Runnable {
         }
     }
 
-
     private BufferStrategy initGUI() {
         JFrame frame = new JFrame();
 
@@ -88,9 +99,9 @@ public class Game implements Runnable {
         canvas.createBufferStrategy(2);
 
         canvas.requestFocus();
+
         return canvas.getBufferStrategy();
     }
-
 
 
     public static void main(String[] args) {

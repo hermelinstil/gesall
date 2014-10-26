@@ -1,4 +1,6 @@
-package GameEntity;
+package gameentity;
+
+import java.awt.*;
 
 /**
  * Created by Stavling on 2014-10-24.
@@ -6,12 +8,10 @@ package GameEntity;
 public class Bullet extends GameObject {
 
 
-    public Bullet(int size) {
-        super(size);
+    public Bullet(Shape geometry) {
+        super(geometry);
 
         //don't render
         active = false;
     }
-
-
 }
