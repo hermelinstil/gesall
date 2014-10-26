@@ -1,3 +1,15 @@
-Player pool - för att underlätta nätverk
+
 När en avatar skjuter, säg till Game istället, låt den hålla koll på cooldown. Detta kommer också att göra det lättare att lägga till i renderingslista och för att skicka shoot-event över nätverk!
 Borde allt skötas på servern? För mycket refactoring?
+Hashmapen i server borde ha ID istället för port
+
+Koder:
+
+Server
+    Y - du lyckades logga in (svar till enskild)
+    N - ny spelare har loggat in (broadcast)
+
+Klient:
+    L - logga in
+    M - move
+    S - shoot

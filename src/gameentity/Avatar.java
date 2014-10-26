@@ -87,7 +87,8 @@ public class Avatar extends GameObject {
     private void shoot() {
         shootCooldown = System.currentTimeMillis();
         color = Color.red;
-        System.out.println("BAAAM");
+        //System.out.println("BAAAM");
+        //Game.getInstance().handleNetworkEvents("hej");
     }
 
     public boolean isHidden() {

@@ -1,8 +1,11 @@
 package systems;
 
 import gameentity.Avatar;
+import gameentity.AvatarMP;
 import gameentity.GameObject;
 import gameentity.InterpolatingBackground;
+import network.Client;
+import network.Server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +18,8 @@ import java.util.Collections;
  */
 public class Game implements Runnable {
 
+    private static Game instance;
+
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     private boolean running = true;
@@ -22,26 +27,48 @@ public class Game implements Runnable {
     private systems.Renderer renderer;
 
     public static final ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private ArrayList<GameObject> tempList = new ArrayList<GameObject>();
     private char[] currentLevel;
 
+    private Client client;
 
-    public Game() {
-        BufferStrategy bufferStrategy = initGUI();
 
+    protected Game() {
+        renderer = new Renderer();
         currentLevel = Loader.loadLevel();
 
         populateList();
 
-        renderer = new systems.Renderer(bufferStrategy);
+        initNetwork();
+    }
+
+    public static Game getInstance() {
+        if(instance == null) {
+            instance = new Game();
+        }
+
+        return instance;
     }
 
     private void populateList() {
-        gameObjects.add(new Avatar(new Rectangle(25, 25)));
+        //gameObjects.add(new Avatar(new Rectangle(25, 25)));
         gameObjects.add(new InterpolatingBackground(new Rectangle(WIDTH, HEIGHT)));
 
         Loader.translateToLevel(currentLevel, gameObjects);
 
         Collections.sort(gameObjects);
+    }
+
+    public void addMPPlayer(String ID) {
+        tempList.add(new AvatarMP(new Rectangle(25, 25), ID));
+    }
+
+    public void addPlayer() {
+        tempList.add(new Avatar(new Rectangle(25, 25)));
+    }
+
+    public void handleNetworkEvents(String s) {
+        client.sendPacket(s.getBytes());
     }
 
     @Override
@@ -54,6 +81,11 @@ public class Game implements Runnable {
         while(running) {
             oldTime = newTime;
             newTime = System.nanoTime();
+
+            if(!tempList.isEmpty()) {
+                gameObjects.addAll(tempList);
+                tempList.clear();
+            }
 
             updateGameObjects(newTime - oldTime);
 
@@ -76,36 +108,20 @@ public class Game implements Runnable {
         }
     }
 
-    private BufferStrategy initGUI() {
-        JFrame frame = new JFrame();
+    private void initNetwork() {
+        boolean isServer = false;
+        if(renderer.query("Server?")) {
+            new Server(this).start();
+            isServer = true;
+        }
 
-        JPanel panel = (JPanel) frame.getContentPane();
-        panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        panel.setLayout(null);
-
-        Canvas canvas = new Canvas();
-        canvas.setBounds(0, 0, WIDTH, HEIGHT);
-        canvas.setIgnoreRepaint(true);
-
-        panel.add(canvas);
-
-        Input.registerInputListeners(canvas);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setResizable(false);
-        frame.setVisible(true);
-
-        canvas.createBufferStrategy(2);
-
-        canvas.requestFocus();
-
-        return canvas.getBufferStrategy();
+        String address = isServer ? "localhost" : renderer.queryText("IP-Adress?");
+        client = new Client(this, address);
+        client.start();
     }
 
-
     public static void main(String[] args) {
-        Game game = new Game();
+        Game game = Game.getInstance();
         new Thread(game).start();
     }
 }

@@ -33,7 +33,7 @@ public class GameObject implements Comparable<GameObject> {
         y = 0;
         color = Color.black;
 
-        ID = random.nextInt();
+        ID = random.nextInt(100);
     }
 
     public int getWidth() {

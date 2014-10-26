@@ -3,6 +3,7 @@ package systems;
 import gameentity.Avatar;
 import gameentity.GameObject;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
@@ -12,11 +13,13 @@ import java.util.ArrayList;
  */
 public class Renderer {
 
+    private JFrame frame;
+
     private ArrayList<GameObject> renderList;
     private BufferStrategy bufferStrategy;
 
-    public Renderer(BufferStrategy bufferStrategy) {
-        this.bufferStrategy = bufferStrategy;
+    public Renderer() {
+        bufferStrategy = initGUI();
     }
 
     public void updateRenderList(ArrayList<GameObject> renderList) {
@@ -45,9 +48,43 @@ public class Renderer {
         }
 
 
-
+        Toolkit.getDefaultToolkit().sync();
         g.dispose();
         bufferStrategy.show();
     }
 
+    private BufferStrategy initGUI() {
+        frame = new JFrame();
+
+        JPanel panel = (JPanel) frame.getContentPane();
+        panel.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        panel.setLayout(null);
+
+        Canvas canvas = new Canvas();
+        canvas.setBounds(0, 0, Game.WIDTH, Game.HEIGHT);
+        canvas.setIgnoreRepaint(true);
+
+        panel.add(canvas);
+
+        Input.registerInputListeners(canvas);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setResizable(false);
+        frame.setVisible(true);
+
+        canvas.createBufferStrategy(2);
+
+        canvas.requestFocus();
+
+        return canvas.getBufferStrategy();
+    }
+
+    public boolean query(String string) {
+        return JOptionPane.showConfirmDialog(frame, string) == JOptionPane.OK_OPTION;
+    }
+
+    public String queryText(String string) {
+        return JOptionPane.showInputDialog(frame, string);
+    }
 }
