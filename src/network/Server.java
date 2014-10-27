@@ -44,6 +44,8 @@ public class Server extends NetworkEntity {
         String[] message = new String(packet.getData()).split("-");
         char code = message[0].charAt(0);
         switch(code) {
+
+            //New player logs in
             case 'L':
                 players.put(packet.getPort(), packet.getAddress());
                 ///MÅSTE SKICKA MED DE SPELARE SOM REDAN FINNS!
@@ -59,6 +61,11 @@ public class Server extends NetworkEntity {
 
                 broadCast(("N-" + packet.getPort()).getBytes(), packet.getPort());
                 System.out.println(players);
+                break;
+
+            //Some player moves
+            case 'M':
+
                 break;
         }
     }

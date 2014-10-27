@@ -59,17 +59,7 @@ public class Game implements Runnable {
         Collections.sort(gameObjects);
     }
 
-    public void addMPPlayer(String ID) {
-        tempList.add(new AvatarMP(new Rectangle(25, 25), ID));
-    }
 
-    public void addPlayer() {
-        tempList.add(new Avatar(new Rectangle(25, 25)));
-    }
-
-    public void handleNetworkEvents(String s) {
-        client.sendPacket(s.getBytes());
-    }
 
     @Override
     public void run() {
@@ -118,6 +108,18 @@ public class Game implements Runnable {
         String address = isServer ? "localhost" : renderer.queryText("IP-Adress?");
         client = new Client(this, address);
         client.start();
+    }
+
+    public void addMPPlayer(String ID) {
+        tempList.add(new AvatarMP(new Rectangle(25, 25), ID));
+    }
+
+    public void addPlayer() {
+        tempList.add(new Avatar(new Rectangle(25, 25)));
+    }
+
+    public void handleNetworkEvents(String s) {
+        client.sendPacket(s.getBytes());
     }
 
     public static void main(String[] args) {

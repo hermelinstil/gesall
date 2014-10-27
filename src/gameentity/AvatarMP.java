@@ -11,4 +11,9 @@ public class AvatarMP extends GameObject {
     public AvatarMP(Shape geometry, String port) {
         super(geometry);
     }
+
+    @Override
+    public void update(long delta) {
+
+    }
 }

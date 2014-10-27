@@ -82,6 +82,8 @@ public class Avatar extends GameObject {
                 shoot();
             }
         }
+
+        Game.getInstance().handleNetworkEvents("M-" + x + "-" + y);
     }
 
     private void shoot() {
