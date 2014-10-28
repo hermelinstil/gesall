@@ -38,7 +38,7 @@ public class Server extends NetworkEntity {
     @Override
     protected void handleData(DatagramPacket packet) {
         //DEBUG
-        System.out.println("SERVER > Packet received from " + packet.getAddress() + ": " + new String(packet.getData()));
+        //System.out.println("SERVER > Packet received from " + packet.getAddress() + ": " + new String(packet.getData()));
 
 
         String[] message = new String(packet.getData()).split("-");
@@ -65,7 +65,6 @@ public class Server extends NetworkEntity {
 
             //Some player moves
             case 'M':
-
                 break;
         }
     }

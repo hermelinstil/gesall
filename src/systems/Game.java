@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -118,6 +119,11 @@ public class Game implements Runnable {
         tempList.add(new Avatar(new Rectangle(25, 25)));
     }
 
+    public void MPPlayerMoved(String player, int[] coordinates) {
+        System.out.println("Player " + player + " moved: " + Arrays.toString(coordinates));
+    }
+
+    //borde spara avatar och skicka själv?!?!
     public void handleNetworkEvents(String s) {
         client.sendPacket(s.getBytes());
     }

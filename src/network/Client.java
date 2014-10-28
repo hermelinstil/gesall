@@ -4,6 +4,7 @@ import systems.Game;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Arrays;
 
 /**
  * Created by molotov on 10/26/14.
@@ -37,11 +38,15 @@ public class Client extends NetworkEntity {
 
 
         String[] message = new String(packet.getData()).split("-");
+
         char code = message[0].charAt(0);
+
         switch(code) {
             case 'N': game.addMPPlayer(message[1]);
                 break;
             case 'Y':   game.addPlayer();
+                break;
+            case 'M':
                 break;
         }
     }
